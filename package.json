@@ -1,0 +1,35 @@
+{
+  "name": "commitlint-config-faithlife",
+  "description": "Shareable commitlint config enforcing Faithlife commit conventions.",
+  "files": [
+    "index.js"
+  ],
+  "repository": "https://github.com/Faithlife/commitlint-config-faithlife",
+  "author": "David Mitchell <dmitchell@logos.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "prettier --check **/*.{js,json}"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "keywords": [
+    "conventional-changelog",
+    "commitlint",
+    "commitlint-config"
+  ],
+  "release": {
+    "branch": "master"
+  },
+  "dependencies": {
+    "@commitlint/config-angular": "^7.5.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^7.5.2",
+    "husky": "^1.3.1",
+    "prettier": "^1.16.4",
+    "semantic-release": "^15.13.3"
+  }
+}
