@@ -1,11 +1,10 @@
 {
   "name": "commitlint-config-faithlife",
-  "description": "Shareable commitlint config enforcing Faithlife commit conventions.",
+  "description": "Shareable configuration for `commitlint` used by Faithlife / Logos Bible Software.",
   "files": [
     "index.js"
   ],
   "repository": "https://github.com/Faithlife/commitlint-config-faithlife",
-  "author": "David Mitchell <dmitchell@logos.com>",
   "license": "MIT",
   "scripts": {
     "lint": "prettier --check **/*.{js,json}"
@@ -22,9 +21,6 @@
   ],
   "release": {
     "branch": "master"
-  },
-  "dependencies": {
-    "@commitlint/config-angular": "^7.5.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^7.5.2",
