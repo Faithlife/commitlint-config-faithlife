@@ -10,6 +10,68 @@ The rules in this shared config focus on requiring what is important for tooling
 
 We follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/), and the docs are useful to consult. (The open source `@commitlint/config-conventional` shared config enforces stylistic preferences beyond the scope of what's in the spec and isn't suitable for our needs.)
 
+## Installation
+
+1. Install [`commitlint`](https://commitlint.js.org/) and this config
+
+```
+yarn add @commitlint/cli commitlint-config-faithlife --dev
+```
+
+2. Create a `commitlint.config.js` that extends `faithlife`:
+
+**ESM:**
+
+```js
+/** @type {import('@commitlint/types').UserConfig} */
+export default {
+	extends: ['faithlife'],
+};
+```
+
+**CommonJS:**
+
+```js
+/** @type {import('@commitlint/types').UserConfig} */
+module.exports = {
+	extends: ['faithlife'],
+};
+```
+
+3. If you haven't already, you'll also probably want to configure `husky` to run `commitlint` as a commit-msg hook.
+
+---
+
+### Husky installation
+
+See [Husky docs](https://typicode.github.io/husky/) for the most up-to-date instructions.
+
+1. Install `husky`. 
+
+```
+yarn add husky --dev
+```
+
+2. Add a `prepare` script to `package.json`—this ensures `husky` runs when packages are installed, which allows it to register git hooks:
+
+```jsonc
+{
+	"name": "my-rad-js-package",
+	"version": "1.0.0",
+	// ...
+	"scripts": {
+		// add this:
+		"prepare": "husky",
+	},
+}
+```
+
+3. Create a `.husky/commit-msg` file that contains:
+
+```
+commitlint --edit $1
+```
+
 ## Example
 
 > Note: the following is not only a terrible commit message, it's also technically invalid—`"type"` is not a valid `type`—but it's a helpful illustration of the format using the token names in context.
