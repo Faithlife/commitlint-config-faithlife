@@ -15,9 +15,6 @@
     "commitlint",
     "commitlint-config"
   ],
-  "release": {
-    "branch": "master"
-  },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "husky": "^9.1.7",
