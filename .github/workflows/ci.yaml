@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      issues: write
       id-token: write # Required for npm OIDC Trusted Publishing
     steps:
       - uses: actions/checkout@v5
@@ -29,6 +30,11 @@ jobs:
         run: yarn lint
 
       - name: Obtain short-lived npm token via OIDC
+        # Exchanges the GitHub OIDC token for a short-lived npm publish token.
+        # Required because @semantic-release/npm's prepare/publish steps call
+        # set-npmrc-auth, which writes NPM_TOKEN to .npmrc before npm publish runs.
+        # OIDC tokens are publish-scoped only - they cannot run `npm whoami`,
+        # which is why verifyConditions for npm is overridden in release.config.js.
         if: github.event_name != 'pull_request' && github.repository_owner == 'Faithlife'
         run: |
           OIDC_TOKEN=$(curl -sS \
@@ -38,6 +44,10 @@ jobs:
             -H "Content-Type: application/json" \
             -d "{\"oidcToken\": \"$OIDC_TOKEN\"}" \
             "https://registry.npmjs.org/-/npm/v1/login/oidc" | jq -r '.token')
+          if [ -z "$NPM_TOKEN" ] || [ "$NPM_TOKEN" = "null" ]; then
+            echo "ERROR: OIDC token exchange failed - check Trusted Publisher config on npmjs.com"
+            exit 1
+          fi
           echo "::add-mask::$NPM_TOKEN"
           echo "NPM_TOKEN=$NPM_TOKEN" >> "$GITHUB_ENV"
 
@@ -47,4 +57,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: 'true'
-          # NPM_TOKEN is set via GITHUB_ENV by the OIDC step above
+          # NPM_TOKEN is set via GITHUB_ENV by the OIDC exchange step above
