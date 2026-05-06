@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      issues: write
       id-token: write # Required for npm OIDC Trusted Publishing
     steps:
       - uses: actions/checkout@v5
@@ -28,23 +29,10 @@ jobs:
       - name: Lint
         run: yarn lint
 
-      - name: Obtain short-lived npm token via OIDC
-        if: github.event_name != 'pull_request' && github.repository_owner == 'Faithlife'
-        run: |
-          OIDC_TOKEN=$(curl -sS \
-            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=npm" | jq -r '.value')
-          NPM_TOKEN=$(curl -sS -X POST \
-            -H "Content-Type: application/json" \
-            -d "{\"oidcToken\": \"$OIDC_TOKEN\"}" \
-            "https://registry.npmjs.org/-/npm/v1/login/oidc" | jq -r '.token')
-          echo "::add-mask::$NPM_TOKEN"
-          echo "NPM_TOKEN=$NPM_TOKEN" >> "$GITHUB_ENV"
-
       - name: Release
         if: github.repository_owner == 'Faithlife'
         run: yarn semantic-release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_CONFIG_PROVENANCE: 'true'
-          # NPM_TOKEN is set via GITHUB_ENV by the OIDC step above
+          # No NPM_TOKEN - npm publish --provenance handles OIDC natively
