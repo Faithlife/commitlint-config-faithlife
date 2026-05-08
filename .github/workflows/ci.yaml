@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - fix/npm-trusted-publishing-v5
 
   pull_request:
     branches:
