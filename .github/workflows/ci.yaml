@@ -23,7 +23,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
 
       - name: Install deps
         run: yarn --frozen-lockfile
@@ -36,5 +36,3 @@ jobs:
         run: yarn semantic-release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_CONFIG_PROVENANCE: 'true'
-          # No NPM_TOKEN needed - @semantic-release/npm v13+ handles OIDC Trusted Publishing natively
